@@ -1,0 +1,29 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+		<ScoreFunction name="memb_hires" weights="franklin2019">
+			<Reweight scoretype = "atom_pair_constraint" weight = "1"/>
+      			<Reweight scoretype = "angle_constraint" weight = "1"/>
+		</ScoreFunction>
+	</SCOREFXNS>
+	<TASKOPERATIONS>
+		<ExtraRotamersGeneric name="extra_rot" ex1="1" ex2="1"/>
+		<InitializeFromCommandline name="ifcl"/>	
+	</TASKOPERATIONS>	
+	<MOVERS>
+		<AddMembraneMover name="add_memb"/>
+		<MembranePositionFromTopologyMover name="init_pos"/>
+		<ConstraintSetMover name = "add_cst" cst_file="coordination.cst"/>
+		<FastRelax name="fast_relax" scorefxn="memb_hires" repeats="8" task_operations="ifcl,extra_rot"/> 
+	</MOVERS>
+	<FILTERS>
+		<PackStat name = "pstat" threshold = "0.58" repeats = "25" confidence="0"/>
+	</FILTERS>
+	<PROTOCOLS>
+		<Add mover="add_memb"/>
+		<Add mover="init_pos"/>
+		<Add mover="add_cst"/>
+		<Add mover="fast_relax"/>
+		<Add filter="pstat"/>
+	</PROTOCOLS>
+	<OUTPUT scorefxn="memb_hires" />
+</ROSETTASCRIPTS>

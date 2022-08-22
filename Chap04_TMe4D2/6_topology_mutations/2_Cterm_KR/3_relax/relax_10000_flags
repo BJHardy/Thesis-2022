@@ -1,0 +1,15 @@
+-parser:protocol membrane_relax_cst.xml
+-in:file:s NCterm__1_hemes_0001.pdb
+-in:file:native NCterm__1_hemes_0001.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles span_TMe4D2.span
+-ignore_unrecognized_res
+-use_input_sc
+-extra_res_fa HEMred.params
+-mp:lipids:has_pore false
+-nstruct 20
+-relax:jump_move true
+-out:file:scorefile scores.sc
+-packing:pack_missing_sidechains 0
+-out:path:all relax_1000

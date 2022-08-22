@@ -1,0 +1,15 @@
+-parser:protocol flexbb_layerdesign_TMonly.xml
+-s leu_e4D2_RK_YW.pdb
+-in:membrane
+-mp:setup:spanfiles input/span_TMe4D2.span
+-mp:lipids:composition DOPE
+-mp:lipids:has_pore false
+-packing:pack_missing_sidechains 0 
+-extra_res_fa input/HEMred.params
+-nstruct 50
+-in:file:native leu_e4D2_RK_YW.pdb
+-out:file:fullatom
+-out:path:all output_TM_only/
+-out:suffix _TMe4D2_flexbb
+-out:file:scorefile score.sc 
+-mute core.select.residue_selector.SecondaryStructureSelector

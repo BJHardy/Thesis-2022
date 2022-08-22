@@ -1,0 +1,13 @@
+-s input/e4D2_looped.pdb
+-nstruct 100
+-extra_res_fa input/HEMred.params
+-in:file:fullatom 
+-out:file:fullatom
+-out:pdb
+-out:suffix _leu_RK_YW
+-resfile leu_resfile.txt
+-packing:multi_cool_annealer 10 
+-ex1
+-ex2
+-out:path:all output
+

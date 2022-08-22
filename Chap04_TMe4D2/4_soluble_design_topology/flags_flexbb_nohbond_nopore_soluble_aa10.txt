@@ -1,0 +1,15 @@
+-parser:protocol flexbb_layerdesign_soluble_aa10.xml
+-in:file:s TMe4D2_RK_YW24_0038_optimized_relaxed_00011_0006.pdb
+-in:file:native TMe4D2_RK_YW24_0038_optimized_relaxed_00011_0006.pdb
+-in:membrane
+-mp:setup:spanfiles span_TMe4D2.span
+-mp:lipids:composition DOPE
+-mp:lipids:has_pore false
+-packing:pack_missing_sidechains 0 
+-extra_res_fa HEMred.params
+-nstruct 50
+-out:file:fullatom
+-out:path:all output_aa_test_10/
+-out:suffix _AAcomp
+-out:file:scorefile score.sc 
+-mute core.select.residue_selector.SecondaryStructureSelector

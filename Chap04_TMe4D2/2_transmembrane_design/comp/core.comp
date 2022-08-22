@@ -1,0 +1,22 @@
+# .comp file to penalise having MORE than 15% polar residues in the transmembrane regions. 
+
+#start the block
+PENALTY_DEFINITION 
+
+#control polars (TMHs) 
+PROPERTIES POLAR 
+
+#fraction polars to allow in TMHs 
+FRACTION 0.20
+
+#penalise only too many 
+PENALTIES 0 0 100 
+
+#penalise when 25% above the threshold 
+FRACT_DELTA_START 0  
+FRACT_DELTA_END 0.25 
+
+
+BEFORE_FUNCTION CONSTANT  
+AFTER_FUNCTION CONSTANT  
+END_PENALTY_DEFINITION 

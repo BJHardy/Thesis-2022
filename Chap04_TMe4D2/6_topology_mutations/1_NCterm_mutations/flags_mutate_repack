@@ -1,0 +1,16 @@
+-parser:protocol fixedbb_NtermMut_repack.xml
+-s 39257152nd_3903471TMe4D2_RK_YW24_0038_optimized_relaxed_00011_000637_002313_0003.pdb
+-in:file:native 39257152nd_3903471TMe4D2_RK_YW24_0038_optimized_relaxed_00011_000637_002313_0003.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles span_TMe4D2.span
+-mp:lipids:composition DOPE
+-mp:lipids:has_pore false
+-in:ignore_unrecognized_res
+-extra_res_fa HEMred.params
+-relax:jump_move true
+-nstruct 100
+-out:path:all mutate_1000/
+-out:file:scorefile score.sc 
+-packing:pack_missing_sidechains 0  
+-mute core.select.residue_selector.SecondaryStructureSelector

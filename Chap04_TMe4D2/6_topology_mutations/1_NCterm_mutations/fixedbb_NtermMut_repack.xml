@@ -1,0 +1,41 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+		<ScoreFunction name="mem_hires" weights="franklin2019">
+			<Reweight scoretype = "atom_pair_constraint" weight = "1"/>
+      			<Reweight scoretype = "angle_constraint" weight = "1"/>
+		</ScoreFunction>
+	</SCOREFXNS>
+	<RESIDUE_SELECTORS>
+		<Index name="heme_binders" resnums="179,79,130,30,109,9,158,58"/>
+	</RESIDUE_SELECTORS>
+	<TASKOPERATIONS>
+		<IncludeCurrent name="input_sc"/>
+		<ExtraRotamersGeneric name="extra_rot" ex1="1" ex2="1"/>
+		<InitializeFromCommandline name="ifcl"/>
+		<ReadResfile name="resfile" filename="resfile.txt"/>
+		<RestrictToRepacking name="no_mutations"/>
+		<OperateOnResidueSubset name = "maintain_his" selector="heme_binders">
+			<PreventRepackingRLT/>
+		</OperateOnResidueSubset>
+
+	</TASKOPERATIONS>
+	<FILTERS>
+		<PackStat name = "pstat" threshold = "0.58" repeats = "25" confidence="0"/>
+	</FILTERS>
+	<MOVERS>
+		<AddMembraneMover name="add_mem"/>
+		<MembranePositionFromTopologyMover name="init_pos"/>
+		<PackRotamersMover name="design" scorefxn="mem_hires" nloop="8" task_operations="input_sc,resfile,extra_rot,ifcl,maintain_his"/>
+		<PackRotamersMover name = "repack" scorefxn = "mem_hires" nloop="8" task_operations = "no_mutations"/>
+		<MinMover name="minmovsc" scorefxn = "mem_hires" type = "lbfgs_armijo_nonmonotone" tolerance = "0.005" max_iter = "300" chi="1" bb="0"/>
+		<ConstraintSetMover name = "add_cst" cst_file="coordination.cst"/>
+	</MOVERS>
+	<PROTOCOLS>
+		<Add mover_name="add_mem"/>
+		<Add mover_name="init_pos"/>
+		<Add mover_name="add_cst"/>
+		<Add mover_name="design"/>
+		<Add mover_name="minmovsc"/>
+		</PROTOCOLS>
+	<OUTPUT scorefxn="memb_hires" />
+</ROSETTASCRIPTS>

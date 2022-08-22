@@ -1,0 +1,15 @@
+-parser:protocol membrane_relax_cst.xml
+-in:file:s 2nd_3903471TMe4D2_RK_YW24_0038_optimized_relaxed_00011_000637_0023.pdb
+-in:file:native 2nd_3903471TMe4D2_RK_YW24_0038_optimized_relaxed_00011_000637_0023.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles input/span_TMe4D2.span
+-ignore_unrecognized_res
+-use_input_sc
+-extra_res_fa input/HEMred.params
+-mp:lipids:has_pore false
+-nstruct 20
+-relax:jump_move true
+-out:file:scorefile scores.sc
+-packing:pack_missing_sidechains 0
+-out:path:all relax_1000

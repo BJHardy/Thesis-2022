@@ -1,0 +1,22 @@
+# .comp file to penalise having MORE than 20% negative residues in the periplasmic loops. 
+
+#start the block
+PENALTY_DEFINITION 
+
+#control positive charges (periplasmic loop) 
+PROPERTIES NEGATIVE_CHARGE 
+
+#fraction to allow 
+FRACTION 0.2 
+
+#penalise only too many 
+PENALTIES 0 0 100 
+
+#penalise when 5% above the threshold 
+FRACT_DELTA_START 0  
+FRACT_DELTA_END 0.05 
+
+
+BEFORE_FUNCTION CONSTANT  
+AFTER_FUNCTION CONSTANT  
+END_PENALTY_DEFINITION 

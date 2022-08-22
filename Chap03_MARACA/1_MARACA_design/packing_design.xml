@@ -1,0 +1,57 @@
+<ROSETTASCRIPTS> 
+	<SCOREFXNS>
+		<ScoreFunction name="mem_hires" weights="mpframework_smooth_fa_2012">
+			<Reweight scoretype = "atom_pair_constraint" weight = "1"/>
+                        <Reweight scoretype = "angle_constraint" weight = "1"/>
+		</ScoreFunction>
+	</SCOREFXNS> 
+	<TASKOPERATIONS>
+		<InitializeFromCommandline name = "ifcl"/>
+		<IncludeCurrent name = "input_sc"/>
+		<ReadResfile name = "resfile" filename ="resfile_preserved_loops.txt"/>   
+		<ExtraRotamersGeneric name = "extra_rot1" ex1 = "1" ex2 = "1" ex1_sample_level = "2" ex2_sample_level = "2" extrachi_cutoff = "2"/>
+		<RestrictToRepacking name="no_mutations"/>
+	</TASKOPERATIONS> 
+	<FILTERS>
+		<PackStat name = "pstat" threshold = "0.58" repeats = "25"/> 
+	</FILTERS>
+	<MOVERS>
+		<AddMembraneMover name="add_mem"/>
+		<MembranePositionFromTopologyMover name="init_pos"/>
+		<ConstraintSetMover name = "atomic" cst_file = "coordination.cst"/>
+		<FastDesign name = "fastdesign" scorefxn = "mem_hires" task_operations = "resfile" cst_file = "coordination.cst"/>
+		<PackRotamersMover name = "repack" scorefxn = "mem_hires" task_operations = "ifcl,no_mutations"/> 
+		<PackRotamersMover name = "pr1" scorefxn = "mem_hires" task_operations = "resfile,ifcl"/> 
+		<PackRotamersMover name = "pr2" scorefxn = "mem_hires" task_operations = "resfile,ifcl,extra_rot1"/> 
+		<MinMover name="minmovsc" scorefxn = "mem_hires" tolerance = "0.005" chi="1" bb="0"/>
+		<MinMover name="minmovbb" scorefxn = "mem_hires" tolerance = "0.005" chi="0" bb="1"/>
+		<Backrub name = "backrub" pivot_residues="1-108" require_mm_bend ="1"/>
+		<Sidechain name = "sidechain" task_operations = "ifcl,no_mutations"/> 
+		<ParsedProtocol name = "backrub_protocol" mode = "random_order">
+			<Add mover_name = "backrub"/>
+			<Add mover_name = "backrub"/>
+			<Add mover_name = "backrub"/>
+			<Add mover_name = "sidechain"/>
+		</ParsedProtocol>
+		<GenericMonteCarlo name = "backrub_mc" mover_name = "backrub_protocol" scorefxn_name = "mem_hires" trials = "200" temperature = "1.2" preapply = "0"/>
+			<ParsedProtocol name="flexdes">
+			<Add mover_name="pr1"/>
+			<Add mover_name="minmovsc"/>
+			<Add mover_name="pr2"/>
+			<Add mover_name="minmovbb"/>
+			<Add mover_name="pr2" filter_name="pstat"/>
+		</ParsedProtocol>
+		<GenericMonteCarlo name="iterate" mover_name="flexdes" scorefxn_name="mem_hires" trials="3" preapply="0" temperature ="0.4"/>  
+	</MOVERS>
+	<PROTOCOLS>
+		<Add mover_name="atomic"/> 
+		<Add mover_name="add_mem"/>	
+		<Add mover_name="init_pos"/>	
+		<Add mover_name = "fastdesign"/>
+		<Add mover_name="repack"/>		
+		<Add mover_name="backrub_mc"/> 
+		<Add mover_name = "iterate"/>
+		<Add filter_name = "pstat"/>
+	</PROTOCOLS>
+	<OUTPUT scorefxn="mem_hires"/>  
+</ROSETTASCRIPTS>

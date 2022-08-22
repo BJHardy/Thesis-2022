@@ -1,0 +1,11 @@
+-parser:protocol packing_design.xml
+-s input/REAMP_BHA_holo1.pdb
+-mp:scoring:hbond 
+-mp:setup:spanfiles input/REAMP.span
+-extra_res_fa input/HEMred.params
+-relax:jump_move true
+-nstruct 30
+-out:file:fullatom
+-out:path:all output_more30/
+-out:file:silent redesigned30more.out
+-out:file:scorefile score_redesigned_30more.sc 

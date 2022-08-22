@@ -1,0 +1,93 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+		<ScoreFunction name="mem_hires" weights="franklin2019">
+			<Reweight scoretype = "atom_pair_constraint" weight = "1"/>
+      			<Reweight scoretype = "angle_constraint" weight = "1"/>
+		</ScoreFunction>
+	</SCOREFXNS>
+	<RESIDUE_SELECTORS>
+
+		#define regions#
+		<Index name="periplasmic" resnums="26-30,84-88" />
+		<Index name="cytosolic" resnums="1-2,52-60,109-112" />
+		<Not name="TM">
+			<Or selectors="periplasmic,cytosolic"/>
+		</Not>
+		<Not name="soluble" selector="TM"/>
+		<Index name="heme_binders" resnums="34,92,6,19,47,105,77,9,37,67,95"/>
+
+		#setting layers and ss for layer design#
+		<Layer name="surface" select_core="false" select_boundary="false" select_surface="true" use_sidechain_neighbors="true"/>
+    		<Layer name="boundary" select_core="false" select_boundary="true" select_surface="false" use_sidechain_neighbors="true"/>
+   		<Layer name="core" select_core="true" select_boundary="false" select_surface="false" use_sidechain_neighbors="true"/>
+    		<SecondaryStructure name="entire_loop" overlap="0" minH="3" minE="2" include_terminal_loops="true" use_dssp="true" ss="L"/>
+    		<SecondaryStructure name="entire_helix" overlap="0" minH="3" minE="2" include_terminal_loops="false" use_dssp="true" ss="H"/>
+		<And name="helix_cap" selectors="entire_loop">
+      			<PrimarySequenceNeighborhood lower="1" upper="0" selector="entire_helix"/>
+   		</And>
+    		<And name="helix_start" selectors="entire_helix">
+      			<PrimarySequenceNeighborhood lower="0" upper="1" selector="helix_cap"/>
+    		</And>
+    		<And name="helix" selectors="entire_helix">
+      			<Not selector="helix_start"/>
+    		</And>
+    		<And name="loop" selectors="entire_loop">
+      			<Not selector="helix_cap"/>
+    		</And>
+
+	</RESIDUE_SELECTORS>
+	<RESIDUE_LEVEL_TASK_OPERATIONS>
+		<RestrictToRepackingRLT name="no_mutations_RLT"/>
+	</RESIDUE_LEVEL_TASK_OPERATIONS>
+	<TASKOPERATIONS>
+		<IncludeCurrent name = "input_sc"/>
+		<InitializeFromCommandline name="ifcl" />
+		<ExtraRotamersGeneric name="extra_rot1" ex1="1"/>
+		<RestrictToRepacking name="no_mutations"/>
+		<OperateOnResidueSubset name = "maintain_soluble" selector="soluble">
+			<RestrictToRepackingRLT/>
+		</OperateOnResidueSubset>
+		<OperateOnResidueSubset name = "maintain_lipidexposed" selector="surface">
+			<RestrictToRepackingRLT/>
+		</OperateOnResidueSubset>
+		<OperateOnResidueSubset name = "maintain_his" selector="heme_binders">
+			<RestrictToRepackingRLT/>
+		</OperateOnResidueSubset>
+		<OperateOnResidueSubset name = "maintain_loops" selector="loop">
+			<RestrictToRepackingRLT/>
+		</OperateOnResidueSubset>
+
+  #define possible mutations per layer#
+		<DesignRestrictions name="layer_design">
+    			<Action selector_logic="helix_start"			aas="KDNSTREYP"/>
+			<Action selector_logic="helix_cap"			aas="YDNSTKREP"/>
+      			<Action selector_logic="boundary AND helix AND TM"	aas="ILVFGASTMKR"/>
+			<Action selector_logic="surface AND helix AND TM"	aas="ILVGSAFWKR"/>
+			<Action selector_logic="surface AND helix AND soluble"  aas="ADEIKLNQRSTVWY"/>
+			<Action selector_logic="boundary AND helix AND soluble" aas="ADEQKRLMKWG"/>
+			<Action selector_logic="core AND helix"			aas="AGILVMTWYF"/>
+      			<Action selector_logic="loop AND periplasmic"		residue_level_operations="no_mutations_RLT"/>
+			<Action selector_logic="loop AND cytosolic" 		residue_level_operations="no_mutations_RLT"/>
+    		</DesignRestrictions>
+
+		
+	</TASKOPERATIONS>
+	<FILTERS>
+		<PackStat name = "pstat" threshold = "0.58" repeats = "25" confidence="0"/>
+	</FILTERS>
+	<MOVERS>
+		<AddMembraneMover name="add_mem"/>
+		<MembranePositionFromTopologyMover name="init_pos"/>
+		<ConstraintSetMover name = "add_cst" cst_file="coordination.cst"/>
+		<FastDesign name = "fastdesign" scorefxn="mem_hires" repeats="6" task_operations="ifcl,maintain_his,layer_design,input_sc,extra_rot1" cst_file="coordination.cst"/>
+		<FastRelax name="relax" scorefxn="mem_hires" cst_file="coordination.cst"/>
+	</MOVERS>
+	<PROTOCOLS>
+		<Add mover_name="add_mem"/>
+		<Add mover_name="init_pos"/>
+		<Add mover_name="add_cst"/>
+		<Add mover_name="fastdesign"/>
+		<Add mover_name="relax"/>
+		<Add filter_name="pstat"/>
+	</PROTOCOLS>
+</ROSETTASCRIPTS>

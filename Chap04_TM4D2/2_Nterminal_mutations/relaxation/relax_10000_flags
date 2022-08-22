@@ -1,0 +1,16 @@
+-parser:protocol membrane_relax_cst.xml
+-in:file:s TM4D219_00031_0001_NtermMut.pdb
+-in:file:native TM4D219_00031_0001_NtermMut.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles leu4D2_rosetta.span
+-ignore_unrecognized_res
+-use_input_sc
+-extra_res_fa HEMred.params
+-mp:lipids:composition DOPE
+-mp:lipids:has_pore false
+-nstruct 350
+-relax:jump_move true
+-out:file:scorefile scores.sc
+-packing:pack_missing_sidechains 0
+-out:path:all relax_10000

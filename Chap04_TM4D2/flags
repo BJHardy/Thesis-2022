@@ -1,0 +1,16 @@
+-parser:protocol layerdesign_TM_only.xml
+-s input/transformed_leu4D2.pdb
+-in:file:native input/transformed_leu4D2.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles input/leu4D2_rosetta.span
+-mp:lipids:composition DOPE
+-mp:lipids:has_pore false
+-in:ignore_unrecognized_res
+-extra_res_fa input/HEMred.params
+-relax:jump_move true
+-nstruct 100
+-out:path:all output_TM_only_no_pore/
+-out:file:scorefile score.sc 
+-packing:pack_missing_sidechains 0  
+-mute core.select.residue_selector.SecondaryStructureSelector

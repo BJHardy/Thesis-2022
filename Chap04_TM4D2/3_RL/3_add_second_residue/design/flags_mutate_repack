@@ -1,0 +1,16 @@
+-parser:protocol fixedbb_NtermMut_repack.xml
+-s TM4D2_19_31_reamploops_49_01_2ndposAdd.pdb
+-in:file:native TM4D2_19_31_reamploops_49_01_2ndposAdd.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles leu4D2_rosetta_reamploops.span
+-mp:lipids:composition DOPE
+-mp:lipids:has_pore false
+-in:ignore_unrecognized_res
+-extra_res_fa HEMred.params
+-relax:jump_move true
+-nstruct 100
+-out:path:all fixbb_1000/
+-out:file:scorefile score.sc 
+-packing:pack_missing_sidechains 0  
+-mute core.select.residue_selector.SecondaryStructureSelector

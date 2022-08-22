@@ -1,0 +1,14 @@
+-parser:protocol membrane_relax_cst.xml
+-in:file:s transformed_TM4D2_19_31_reamploops.pdb
+-in:file:native transformed_TM4D2_19_31_reamploops.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles leu4D2_rosetta_reamploops.span
+-ignore_unrecognized_res
+-use_input_sc
+-extra_res_fa HEMred.params
+-mp:lipids:has_pore false
+-nstruct 350
+-relax:jump_move true
+-out:file:scorefile scores.sc
+-packing:pack_missing_sidechains 0

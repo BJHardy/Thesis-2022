@@ -1,0 +1,15 @@
+-parser:protocol TM4D2_BCL_flexbb_unsats.xml
+-s TM4D2_NT_mono1_BCL_pos2_transformed.pdb
+-in:file:native TM4D2_NT_mono1_BCL_pos2_transformed.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles leu_4D2_V1_OPM.span
+-mp:lipids:has_pore false
+-in:ignore_unrecognized_res
+-extra_res_fa BCLA.params
+-relax:jump_move true
+-nstruct 350
+-out:path:all output_100/
+-out:file:scorefile score.sc 
+-packing:pack_missing_sidechains 0  
+-mute core.select.residue_selector.SecondaryStructureSelector

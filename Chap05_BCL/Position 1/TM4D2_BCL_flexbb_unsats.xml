@@ -1,0 +1,59 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+		<ScoreFunction name="mem_hires" weights="franklin2019">
+			<Reweight scoretype = "atom_pair_constraint" weight = "1"/>
+      			<Reweight scoretype = "angle_constraint" weight = "1"/>
+			<Reweight scoretype = "aa_composition" weight = "1"/>
+			<Reweight scoretype="buried_unsatisfied_penalty" weight="1.0"/>
+		</ScoreFunction>
+		<ScoreFunction name="mem_hires_relax" weights="franklin2019">
+			<Reweight scoretype = "atom_pair_constraint" weight = "1"/>
+      			<Reweight scoretype = "angle_constraint" weight = "1"/>
+			<Reweight scoretype = "aa_composition" weight = "1"/>
+			<Reweight scoretype="buried_unsatisfied_penalty" weight="0.0"/>
+		</ScoreFunction>
+	</SCOREFXNS>
+	<RESIDUE_SELECTORS>
+		<Index name="BCL" resnums="114"/>	
+		<Layer name="surface" select_core="false" select_boundary="true" select_surface="true" use_sidechain_neighbors="true"/>
+	</RESIDUE_SELECTORS>
+	<TASKOPERATIONS>
+		<IncludeCurrent name="input_sc"/>
+		<ExtraRotamersGeneric name="extra_rot2" ex1="1" ex2="1" ex1aro="1" ex2aro="1"/>
+		<ExtraRotamersGeneric name="extra_rot1" ex1="1" ex1aro="1"/>
+		<InitializeFromCommandline name="ifcl"/>
+		<ReadResfile name="resfile" filename="resfile"/>
+	</TASKOPERATIONS>	
+	<FILTERS>
+		#This reports packstat if you want a measure of packing improvement after design#
+		<PackStat name = "pstat" threshold = "0.58" repeats = "25" confidence="0"/>
+	</FILTERS>
+	<SIMPLE_METRICS>
+		<TimingProfileMetric name="timing"/>
+		<HbondMetric name="hbond_BCL" residue_selector="BCL"/> 
+	</SIMPLE_METRICS>
+	<MOVERS>
+		<AddMembraneMover name="add_mem"/>
+		<MembranePositionFromTopologyMover name="init_pos"/>
+		<AddCompositionConstraintMover name="comp_aro" filename="aromatic.comp" selector="surface"/>
+		<PackRotamersMover name="fixbb_design" scorefxn="mem_hires" task_operations="input_sc,resfile,extra_rot2,ifcl"/>
+		<FastDesign name="fastdesign" scorefxn="mem_hires" repeats="5" task_operations="input_sc,resfile,extra_rot2,ifcl"/>
+		<ConstraintSetMover name = "add_cst" cst_file="coordination.cst"/>
+		<FastRelax name="relax" scorefxn="mem_hires_relax" cst_file="coordination.cst"/>
+		<RunSimpleMetrics name="run_metrics1" metrics="hbond_BCL" prefix="m1"/>
+		<RunSimpleMetrics name="run_metrics2" metrics="hbond_BCL" prefix="m2"/>
+	</MOVERS>
+	<PROTOCOLS>
+		<Add mover_name="add_mem"/>
+		<Add mover_name="init_pos"/>
+		<Add mover_name="add_cst"/>
+		<Add mover_name="comp_aro"/>
+		<Add mover_name="run_metrics1"/>
+		<Add mover_name="fastdesign"/>
+		<Add mover_name="relax"/>
+		<Add mover_name="run_metrics2"/>
+		<Add filter_name="pstat"/>
+	</PROTOCOLS>
+</ROSETTASCRIPTS>
+
+

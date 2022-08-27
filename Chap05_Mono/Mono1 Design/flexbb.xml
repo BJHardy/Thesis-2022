@@ -1,0 +1,35 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+		<ScoreFunction name="mem_hires" weights="franklin2019">
+			<Reweight scoretype = "atom_pair_constraint" weight = "1"/>
+      			<Reweight scoretype = "angle_constraint" weight = "1"/>
+		</ScoreFunction>
+	</SCOREFXNS>
+	<TASKOPERATIONS>
+		<IncludeCurrent name="input_sc"/>
+		<ExtraRotamersGeneric name="extra_rot" ex1="1" ex2="1"/>
+		<InitializeFromCommandline name="ifcl"/>
+		<ReadResfile name="resfile" filename="resfile"/>
+	</TASKOPERATIONS>
+	<FILTERS>
+		#This reports packstat if you want a measure of packing improvement after design#
+		<PackStat name = "pstat" threshold = "0.58" repeats = "25" confidence="0"/>
+	</FILTERS>
+	<MOVERS>
+		<AddMembraneMover name="add_mem"/>
+		<MembranePositionFromTopologyMover name="init_pos"/>
+		<FastDesign name="fastdesign" scorefxn="mem_hires" task_operations="input_sc,resfile,extra_rot,ifcl"/>
+		<ConstraintSetMover name = "add_cst" cst_file="coordination.cst"/>
+		<FastRelax name="relax" scorefxn="mem_hires" cst_file="coordination.cst"/>
+	</MOVERS>
+	<PROTOCOLS>
+		<Add mover_name="add_mem"/>
+		<Add mover_name="init_pos"/>
+		<Add mover_name="add_cst"/>
+		<Add mover_name="fastdesign"/>
+		<Add mover_name="relax"/>
+		<Add filter_name="pstat"/>
+	</PROTOCOLS>
+</ROSETTASCRIPTS>
+
+

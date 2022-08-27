@@ -1,0 +1,15 @@
+-parser:protocol flexbb.xml
+-s TM4D2_NT_site1_repack.pdb
+-in:file:native TM4D2_NT_site1_repack.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles TM4D2_rosetta.span
+-mp:lipids:has_pore false
+-in:ignore_unrecognized_res
+-extra_res_fa HEMred.params
+-relax:jump_move true
+-nstruct 100
+-out:path:all output_5000/
+-out:file:scorefile score.sc 
+-packing:pack_missing_sidechains 0  
+-mute core.select.residue_selector.SecondaryStructureSelector

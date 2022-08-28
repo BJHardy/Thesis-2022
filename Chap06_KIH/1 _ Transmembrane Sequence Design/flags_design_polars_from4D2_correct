@@ -1,0 +1,15 @@
+-parser:protocol TM4D2_KIH_flexbb_polars_script_correct.xml
+-s input/4D2_CORRECT_transformed.pdb
+-in:file:native input/4D2_CORRECT_transformed.pdb
+-in:membrane
+-mp:scoring:hbond true
+-mp:setup:spanfiles input/4D2_correct.span
+-mp:lipids:has_pore false
+-in:ignore_unrecognized_res
+-extra_res_fa input/HEMred.params
+-relax:jump_move true
+-nstruct 1000
+-out:path:all output_flexbb_restricted_correct/
+-out:file:scorefile score.sc 
+-packing:pack_missing_sidechains 0  
+-mute core.select.residue_selector.SecondaryStructureSelector
